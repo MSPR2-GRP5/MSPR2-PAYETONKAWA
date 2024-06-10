@@ -1,5 +1,5 @@
 """
-ASGI config for paye_to_kawa project.
+ASGI config for paye_ton_kawa project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paye_to_kawa.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paye_ton_kawa.settings')
 
 application = get_asgi_application()
