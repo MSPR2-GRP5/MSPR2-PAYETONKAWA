@@ -1,2 +1,3 @@
 django-ninja
 django
+ruff>=0.4.8
