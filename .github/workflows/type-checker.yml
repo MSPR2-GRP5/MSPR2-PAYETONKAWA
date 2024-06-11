@@ -26,4 +26,4 @@ jobs:
         pip install -r paye_ton_kawa/requirements.txt
     - name: MyPy strict
       run: |
-        mypy --strict --exclude paye_ton_kawa/paye_ton_kawa/ --exclude paye_ton_kawa/manage.py paye_ton_kawa/
+        mypy --strict --config-file=paye_ton_kawa/mypy.ini --exclude paye_ton_kawa/manage.py paye_ton_kawa/
