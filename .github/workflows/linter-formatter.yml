@@ -1,0 +1,17 @@
+name: Code linting
+
+on: ["pull_request"]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: chartboost/ruff-action@v1
+      with:
+        src: "./paye_ton_kawa"
