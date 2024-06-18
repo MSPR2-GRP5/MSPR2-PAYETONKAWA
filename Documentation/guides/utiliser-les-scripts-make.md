@@ -26,7 +26,7 @@ Pour ce faire, plusieurs méthodes existent :
 
 ## Utiliser les scripts
 
-Pour lancer la commande, se place à la racine du projet, au même niveau que le **manage.py**, et
+Pour lancer la commande, se place à la racine du projet Django, au même niveau que le **manage.py**, et
 utiliser `make <commande>`.
 
 - `make pip-install`
