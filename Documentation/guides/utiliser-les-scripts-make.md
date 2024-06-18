@@ -7,6 +7,9 @@ Un certain nombre de tâches sont souvent répétées et demande parfois plusieu
 
 Avoir Make d'installé sur son ordinateur.
 
+Si vous ne voulez pas installer Make, vous pouvez toujours utiliser les commandes telles quelle en les copiant du
+Makefile.
+
 ### Linux
 
 Make fait partis des outils GNU et est donc de base dans la plupart des distributions.
