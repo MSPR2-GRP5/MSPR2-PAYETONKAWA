@@ -2,7 +2,7 @@ from datetime import datetime
 # https://stackoverflow.com/questions/6578986/how-to-convert-json-data-into-a-python-object
 
 
-class Clients:
+class Customer:
     def __init__(self, id: int, last_name: str, first_name: str, address: str):
         self.id = id
         self.last_name = last_name
@@ -13,7 +13,7 @@ class Clients:
         return "{0} {1}".format(self.first_name, self.last_name)
 
 
-class Products:
+class Product:
     def __init__(
         self,
         id: int,
@@ -34,7 +34,7 @@ class Products:
         return self.name
 
 
-class Command:
+class Order:
     def __init__(
         self,
         id: int,
