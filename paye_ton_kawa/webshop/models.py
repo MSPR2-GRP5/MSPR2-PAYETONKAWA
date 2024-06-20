@@ -38,14 +38,14 @@ class Order:
     def __init__(
         self,
         id: int,
-        client_id: int,
+        customer_id: int,
         product_id: int,
         date: datetime,
         quantity: int,
         price: int,
     ):
         self.id = id
-        self.client_id = client_id
+        self.client_id = customer_id
         self.product_id = product_id
         self.date = date
         self.quantity = quantity
