@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webshop</title>
+</head>
+<body>
+<h1>Webshop</h1>
+<article>
+    <h2>Clients</h2>
+    <form class="search-form flow">
+        <label for="search">Rechercher un client</label>
+        <div class="search-form__controls sidebar">
+            <input type="text" name="search" id="search" placeholder="Jean Dupont..." required>
+            <button class="btn">Chercher</button>
+        </div>
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Adresse</th>
+            <th>Actions</th>
+        </tr>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.last_name }}</td>
+            <td>{{ customer.first_name }}</td>
+            <td>{{ customer.address }}</td>
+            <td>
+                <button class="btn">Modifier</button>
+                <button class="btn">Supprimer</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</article><article>
+    <h2>Produits</h2>
+    <form class="search-form flow">
+        <label for="search">Rechercher un produit</label>
+        <div class="search-form__controls sidebar">
+            <input type="text" name="search" id="search" placeholder="Chaussettes..." required>
+            <button class="btn">Chercher</button>
+        </div>
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Lieu d'import</th>
+            <th>Prix</th>
+            <th>Stocks</th>
+            <th>Actions</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.import_location }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stocks }}</td>
+            <td>
+                <button class="btn">Modifier</button>
+                <button class="btn">Supprimer</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</article>
+<article>
+    <h2>Commande</h2>
+    <form class="search-form flow">
+        <label for="search">Rechercher une commande</label>
+        <div class="search-form__controls sidebar">
+            <input type="text" name="search" id="search" placeholder="1485..." required>
+            <button class="btn">Chercher</button>
+        </div>
+    </form>
+   <table>
+        <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Produit</th>
+            <th>Date</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.description }}</td>
+            <td>{{ order.import_location }}</td>
+            <td>{{ order.price }}</td>
+            <td>{{ order.stocks }}</td>
+            <td>
+                <button class="btn">Modifier</button>
+                <button class="btn">Supprimer</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</article>
+</body>
+</html>
