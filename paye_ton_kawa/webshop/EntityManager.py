@@ -21,7 +21,6 @@ API_SETTINGS: Final[dict[str, dict[str, str]]] = {
 def request(api_name: str, parameters: dict[str, Any]) -> Any:
     settings = API_SETTINGS[api_name]
     url = f"http://{settings['url']}/api/{api_name}"
-    print("=-=-=-=-=-=-=-=-=-=-=-=-=\n", url)
     headers = {
         "accept": "application/json",
         "X-API-Key": settings["api_key"],
