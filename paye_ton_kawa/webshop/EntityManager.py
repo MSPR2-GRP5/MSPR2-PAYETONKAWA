@@ -32,7 +32,12 @@ def request(api_name: str, parameters: dict[str, Any]) -> Any:
     except requests.exceptions.ConnectionError:
         return {"error": "Connection failed. Is the API server running ?"}
 
-    return json.loads(response.text)
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        return {"error": "JSON decoding error. Is the API url correct ?"}
+
+    return response_json
 
 
 def json_to_object(
@@ -92,6 +97,7 @@ class EntityManager:
         response = request(api_name, params)
 
         if "error" in response:
+            print("####################\n", "Error: ", response["error"], "\n####################\n")
             return response
 
         return json_to_object(response, api_name)
