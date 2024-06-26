@@ -12,22 +12,25 @@ env = environ.Env()
 env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
-    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "localhost:8001"},
-    "product": {"api_key": "", "url": "localhost:8002"},
-    "order": {"api_key": "", "url": "localhost:8003"},
+    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/api/customer"},
+    "product": {"api_key": "", "url": "http://localhost:8002/api/product"},
+    "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
 }
 
 
 def request(api_name: str, parameters: dict[str, Any]) -> Any:
     settings = API_SETTINGS[api_name]
-    url = f"http://{settings['url']}/api/{api_name}"
+    url_id = f"/{parameters["url_id"]}" if "url_id" in parameters else ""
+    url = f"{settings['url']}{url_id}"
+    print(url)
     headers = {
         "accept": "application/json",
         "X-API-Key": settings["api_key"],
     }
 
     try:
-        response = requests.get(url, params=parameters, headers=headers)
+        response = requests.get(url, params=parameters["request_params"], headers=headers)
+        print(response)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         return {"error": "Connection failed. Is the API server running ?"}
@@ -92,7 +95,11 @@ class EntityManager:
         api_name: str,
     ) -> list[Customer] | list[Product] | list[Order] | list[None] | dict[str, Any] :
         # Exploit the API to get all the entities without knowing the fields name
-        params = {"gibberish": "random"}
+        params = {
+            "request_params": {
+                "gibberish": "random"
+            }
+        }
 
         response = request(api_name, params)
 
