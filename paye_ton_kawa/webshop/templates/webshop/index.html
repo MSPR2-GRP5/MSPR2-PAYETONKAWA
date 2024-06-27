@@ -3,24 +3,11 @@
 {% block content %}
     <main>
         <article class="flow region wrapper">
-            <h2>Clients</h2>
+            <h2>{{ heading }}</h2>
 
             {% include 'webshop/search_form.html' %}
             {% include 'webshop/data_table.html' %}
 
-        </article>
-        <article class="flow region wrapper">
-            <h2>Produits</h2>
-
-            {% include 'webshop/search_form.html' %}
-            {% include 'webshop/data_table.html' %}
-
-        </article>
-        <article class="flow region wrapper">
-            <h2>Commandes</h2>
-
-            {% include 'webshop/search_form.html' %}
-            {% include 'webshop/data_table.html' %}
         </article>
     </main>
 {% endblock %}
