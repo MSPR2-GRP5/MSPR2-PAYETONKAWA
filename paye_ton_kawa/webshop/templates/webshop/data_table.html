@@ -7,7 +7,10 @@
     {% if error %}
         </table>
         <p class="error">Oups, une erreur est survenue</p>
-    {% elif objects|length > 0 %}
+    {% elif objects|length < 0 or not objects %}
+        </table>
+        <p>Il semblerait que la base soit vide...</p>
+    {% else %}
         {% for object in objects %}
             <tr>
                 {% for attribute in object.attributes %}
