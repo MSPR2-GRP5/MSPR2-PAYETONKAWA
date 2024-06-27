@@ -1,0 +1,23 @@
+<table>
+    <tr>
+        {% for header in table_headers %}
+        	<th>{{ header }}</th>
+        {% endfor %}
+    </tr>
+    {% if error %}
+        </table>
+        <p class="error">Oups, une erreur est survenue</p>
+    {% elif objects|length > 0 %}
+        {% for object in objects %}
+            <tr>
+                {% for attribute in object.attributes %}
+                	<td>{{ attribute }}</td>
+                {% endfor %}
+                <td>
+                    <button class="button">Modifier</button>
+                    <button class="button button__danger">Supprimer</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}

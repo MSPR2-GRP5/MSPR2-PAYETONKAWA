@@ -6,105 +6,21 @@
             <h2>Clients</h2>
 
             {% include 'webshop/search_form.html' %}
+            {% include 'webshop/data_table.html' %}
 
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Adresse</th>
-                    <th>Actions</th>
-                </tr>
-                {% if customers.error %}
-                    </table>
-                    <p class="error">Oups, une erreur est survenue</p>
-                {% elif customers|length > 0 %}
-                    {% for customer in customers %}
-                        <tr>
-                            <td>{{ customer.id }}</td>
-                            <td>{{ customer.last_name }}</td>
-                            <td>{{ customer.first_name }}</td>
-                            <td>{{ customer.address }}</td>
-                            <td>
-                                <button class="button">Modifier</button>
-                                <button class="button button__danger">Supprimer</button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                {% endif %}
         </article>
         <article class="flow region wrapper">
             <h2>Produits</h2>
 
             {% include 'webshop/search_form.html' %}
+            {% include 'webshop/data_table.html' %}
 
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Description</th>
-                    <th>Lieu d'import</th>
-                    <th>Prix</th>
-                    <th>Stocks</th>
-                    <th>Actions</th>
-                </tr>
-                {% if products.error %}
-                    </table>
-                    <p class="error">Oups, une erreur est survenue</p>
-                {% elif products|length > 0 %}
-                    {% for product in products %}
-                        <tr>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
-                            <td>{{ product.import_location }}</td>
-                            <td>{{ product.price }}</td>
-                            <td>{{ product.stocks }}</td>
-                            <td>
-                                <button class="button">Modifier</button>
-                                <button class="button button__danger">Supprimer</button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                {% endif %}
         </article>
         <article class="flow region wrapper">
             <h2>Commandes</h2>
 
             {% include 'webshop/search_form.html' %}
+            {% include 'webshop/data_table.html' %}
 
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Client</th>
-                    <th>Produit</th>
-                    <th>Date</th>
-                    <th>Quantité</th>
-                    <th>Prix</th>
-                    <th>Actions</th>
-                </tr>
-                {% if orders.error %}
-                    </table>
-                    <p class="error">Oups, une erreur est survenue</p>
-                {% elif orders|length > 0 %}
-                    {% for order in orders %}
-                        <tr>
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.name }}</td>
-                            <td>{{ order.description }}</td>
-                            <td>{{ order.import_location }}</td>
-                            <td>{{ order.price }}</td>
-                            <td>{{ order.stocks }}</td>
-                            <td>
-                                <button class="button">Modifier</button>
-                                <button class="button button__danger">Supprimer</button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                {% endif %}
-        </article>
     </main>
 {% endblock %}
