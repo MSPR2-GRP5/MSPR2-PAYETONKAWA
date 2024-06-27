@@ -4,13 +4,9 @@
     <main>
         <article class="flow region wrapper">
             <h2>Clients</h2>
-            <form class="search-form flow">
-                <label for="search">Rechercher un client</label>
-                <div class="search-form__controls sidebar">
-                    <input type="text" name="search" id="search" placeholder="Jean Dupont..." required>
-                    <button class="button">Chercher</button>
-                </div>
-            </form>
+
+            {% include 'webshop/search_form.html' %}
+
             <table>
                 <tr>
                     <th>ID</th>
@@ -40,13 +36,9 @@
         </article>
         <article class="flow region wrapper">
             <h2>Produits</h2>
-            <form class="search-form flow">
-                <label for="search">Rechercher un produit</label>
-                <div class="search-form__controls sidebar">
-                    <input type="text" name="search" id="search" placeholder="Chaussettes..." required>
-                    <button class="button">Chercher</button>
-                </div>
-            </form>
+
+            {% include 'webshop/search_form.html' %}
+
             <table>
                 <tr>
                     <th>ID</th>
@@ -80,13 +72,9 @@
         </article>
         <article class="flow region wrapper">
             <h2>Commandes</h2>
-            <form class="search-form flow">
-                <label for="search">Rechercher une commande</label>
-                <div class="search-form__controls sidebar">
-                    <input type="text" name="search" id="search" placeholder="1485..." required>
-                    <button class="button">Chercher</button>
-                </div>
-            </form>
+
+            {% include 'webshop/search_form.html' %}
+
             <table>
                 <tr>
                     <th>ID</th>
