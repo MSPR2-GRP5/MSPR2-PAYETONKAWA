@@ -1,23 +1,11 @@
 from typing import Any
 
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from webshop.EntityManager import EntityManager
 
-
-def index(request: Any) -> HttpResponse:
-    customers = EntityManager.get_all("customer")
-    products = EntityManager.get_all("product")
-    orders = EntityManager.get_all("order")
-
-    return render(
-        request,
-        "webshop/index.html",
-        {"customers": customers, "products": products, "orders": orders},
-    )
-
+def index_customer(request: Any) -> HttpResponse:
+    return HttpResponse("<h1>Customers</h1>")
 
 @require_http_methods(['POST'])
 def create_customer(request: Any, attr: dict[str, Any]) -> HttpResponse:
