@@ -19,26 +19,6 @@ API_SETTINGS: Final[dict[str, dict[str, str]]] = {
 
 
 def index_customer(request: Any) -> HttpResponse:
-    # headers = {
-    #     "accept": "application/json",
-    #     "X-API-Key": API_SETTINGS["customer"]["api_key"],
-    # }
-    #
-    # try:
-    #     response = requests.get(API_SETTINGS["customer"]["url"], headers=headers)
-    #     print(response)
-    # # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
-    # except requests.exceptions.ConnectionError:
-    #     print({"error": "Connection failed. Is the API server running ?"})
-    #     return HttpResponse("aled")
-    #
-    # try:
-    #     response_json = response.json()
-    #     print(response_json)
-    # except json.JSONDecodeError:
-    #     print({"error": "JSON decoding error. Is the API url correct ?"})
-    #     return HttpResponse("aled")
-
     context = {
         "heading": "Clients",
         "search_form": {
@@ -46,7 +26,7 @@ def index_customer(request: Any) -> HttpResponse:
             "placeholder": "Jean Michel"
         },
         "table_headers": [
-            "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie"
+            "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie", ""
         ]
     }
     return render(request, "webshop/index.html", context)
@@ -67,8 +47,43 @@ def find_customer_by(request: Any, attr: dict[str, Any]) -> HttpResponse:
     return HttpResponse({"success": f"CLient {attr['name']} trouvé"})
 
 
+@require_http_methods(['GET'])
 def find_all_customers(request: Any) -> HttpResponse:
-    return HttpResponse({"success": "CLients trouvés"})
+    headers = {
+        "accept": "application/json",
+        "X-API-Key": API_SETTINGS["customer"]["api_key"],
+    }
+
+    try:
+        response = requests.get(API_SETTINGS["customer"]["url"], headers=headers)
+    # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+    except requests.exceptions.ConnectionError:
+        print({"error": "Connection failed. Is the API server running ?"})
+        return render(request, "webshop/data_table_content.html", {"error": "Connection failed. Is the API server running ?"})
+
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        print({"error": "JSON decoding error. Is the API url correct ?"})
+        return render(request, "webshop/data_table_content.html", {"error": "JSON decoding error. Is the API url correct ?"})
+
+    customers = []
+
+    for customer_json in response_json:
+        customer = {
+            "id": customer_json["id"],
+            "last_name": customer_json["last_name"],
+            "first_name": customer_json["first_name"],
+            "username": customer_json["username"],
+            "postal_code": customer_json["address"]["postal_code"],
+            "city": customer_json["address"]["city"],
+            "company": customer_json["company"]["company_name"]
+        }
+        customers.append(customer)
+
+    context = {"objects": customers}
+
+    return render(request, "webshop/data_table_content.html", context)
 
 
 @require_http_methods(['POST'])

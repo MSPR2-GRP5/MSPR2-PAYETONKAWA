@@ -1,0 +1,20 @@
+{% load webshop_tags %}
+
+{% if error %}
+    <tr>
+        <td colspan="999" class="error">Oups, une erreur est survenue</td>
+    </tr>
+{% endif %}
+
+{% for object in objects %}
+    <tr>
+        {% for attribute in object %}
+            <td>{{ object|attr:attribute }}</td>
+        {% endfor %}
+        <td>
+            <button class="button">Modifier</button>
+            <button class="button button__danger">Supprimer</button>
+        </td>
+    </tr>
+{% endfor %}
+

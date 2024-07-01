@@ -4,22 +4,9 @@
             <th>{{ header }}</th>
         {% endfor %}
     </tr>
-    {% if error %}
-        </table>
-        <p class="error">Oups, une erreur est survenue</p>
-    {% else %}
-        {#        {% for object in objects %}#}
-        {#            {{ object }}#}
-        {#            <tr>#}
-        {#                {% for attribute in object %}#}
-        {#                	<td>{{ attribute }}</td>#}
-        {#                {% endfor %}#}
-        {#                <td>#}
-        {#                    <button class="button">Modifier</button>#}
-        {#                    <button class="button button__danger">Supprimer</button>#}
-        {#                </td>#}
-        {#            </tr>#}
-        {#        {% endfor %}#}
-        </table>
-        <p>Chargement des données...</p>
-    {% endif %}
+    <tr hx-get="find-all/" hx-trigger="load" hx-swap="outerHTML">
+        {% for header in table_headers %}
+            <td>...</td>
+        {% endfor %}
+    </tr>
+</table>
