@@ -1,16 +1,34 @@
 from datetime import datetime
+
+
 # https://stackoverflow.com/questions/6578986/how-to-convert-json-data-into-a-python-object
 
 
-class Customer:
-    def __init__(self, id: int, last_name: str, first_name: str, address: str):
-        self.id = id
+class Customer(object):
+    def __init__(
+        self,
+        customer_id: int,
+        created_at: datetime,
+        name: str,
+        username: str,
+        last_name: str,
+        first_name: str,
+        address: dict[str: str | int],
+        profile: dict[str:str],
+        company: dict[str:str],
+    ):
+        self.id = customer_id
+        self.created_at = created_at
+        self.name = name
+        self.username = username
         self.last_name = last_name
         self.first_name = first_name
         self.address = address
+        self.profile = profile
+        self.company = company
 
     def __str__(self) -> str:
-        return "{0} {1}".format(self.first_name, self.last_name)
+        return self.name
 
 
 class Product:
