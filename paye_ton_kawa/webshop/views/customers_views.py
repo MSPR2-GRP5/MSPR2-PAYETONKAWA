@@ -17,6 +17,11 @@ API_SETTINGS: Final[dict[str, dict[str, str]]] = {
     "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
 }
 
+HEADERS = {
+    "accept": "application/json",
+    "X-API-Key": API_SETTINGS["customer"]["api_key"],
+}
+
 
 def index_customer(request: Any) -> HttpResponse:
     context = {
@@ -49,13 +54,8 @@ def find_customer_by(request: Any, attr: dict[str, Any]) -> HttpResponse:
 
 @require_http_methods(['GET'])
 def find_all_customers(request: Any) -> HttpResponse:
-    headers = {
-        "accept": "application/json",
-        "X-API-Key": API_SETTINGS["customer"]["api_key"],
-    }
-
     try:
-        response = requests.get(API_SETTINGS["customer"]["url"], headers=headers)
+        response = requests.get(API_SETTINGS["customer"]["url"], headers=HEADERS)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
