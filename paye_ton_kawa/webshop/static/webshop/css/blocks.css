@@ -21,3 +21,9 @@
 .button.button__danger:focus-within, .button.button__danger:hover {
     background: var(--clr-orange);
 }
+
+.callout {
+    border: 2px solid var(--clr-info, var(--clr-blue));
+    border-radius: .5rem;
+    padding:var(--space-xs) var(--space-xs);
+}

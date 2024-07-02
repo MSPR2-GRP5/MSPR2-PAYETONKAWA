@@ -3,7 +3,12 @@
 }
 
 .error {
-    color: var(--clr-error);
+    --clr-info: var(--clr-error);
+    color: var(--clr-info);
+}
+.success {
+    --clr-info: var(--clr-success);
+    color: var(--clr-info);
 }
 
 .region {

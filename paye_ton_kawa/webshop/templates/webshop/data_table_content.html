@@ -13,7 +13,12 @@
         {% endfor %}
         <td>
             <button class="button">Modifier</button>
-            <button class="button button__danger">Supprimer</button>
+            <button class="button button__danger"
+                    hx-delete="delete/{{ object.id }}"
+                    hx-target="#response-msg"
+                    hx-swap="outerHTML">
+                Supprimer
+            </button>
         </td>
     </tr>
 {% endfor %}

@@ -91,6 +91,13 @@ def update_customer(request: Any, customer_id: int) -> HttpResponse:
     return HttpResponse({"success": f"CLient {customer_id} mis à jour"})
 
 
-@require_http_methods(['POST'])
-def delete_customer(request: Any, customer_id: int) -> HttpResponse:
-    return HttpResponse({"success": f"CLient {customer_id} supprimé"})
+@require_http_methods(['DELETE'])
+def delete_customer(request: Any, id: int) -> HttpResponse:
+    try:
+        requests.delete(API_SETTINGS["customer"]["url"] + f"/{id}", headers=HEADERS)
+    # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+    except requests.exceptions.ConnectionError:
+        print({"error": "Connection failed. Is the API server running ?"})
+        return HttpResponse('<p class="error callout" id="response-msg">Erreur</p>')
+
+    return HttpResponse({f"<p class='success callout' id='response-msg'>CLient {id} supprimé</p>"})
