@@ -6,6 +6,12 @@
     </tr>
 {% endif %}
 
+{% if objects|length <= 0 %}
+	<tr>
+        <td colspan="999">Aucune donnée trouvée</td>
+    </tr>
+{% endif %}
+
 {% for object in objects %}
     <tr>
         {% for attribute in object %}
