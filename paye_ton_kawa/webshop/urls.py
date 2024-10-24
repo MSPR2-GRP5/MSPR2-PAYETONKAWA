@@ -16,7 +16,7 @@ def get_crud_patterns(path_root: str) -> list[URLPattern]:
         path("find/", getattr(views_modules[path_root], f"find_{path_root}"), name=f"find_{path_root}"),
         path("find-by/", getattr(views_modules[path_root], f"find_{path_root}_by"), name=f"find_{path_root}_by"),
         path("find-all/", getattr(views_modules[path_root], f"find_all_{path_root}s"), name=f"find_all_{path_root}s"),
-        path("update/", getattr(views_modules[path_root], f"update_{path_root}"), name=f"update_{path_root}"),
+        path("update/<int:id>", getattr(views_modules[path_root], f"update_{path_root}"), name=f"update_{path_root}"),
         path("delete/<int:id>", getattr(views_modules[path_root], f"delete_{path_root}"), name=f"delete_{path_root}"),
     ]
 

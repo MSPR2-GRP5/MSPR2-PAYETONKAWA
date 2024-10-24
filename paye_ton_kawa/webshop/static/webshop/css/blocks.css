@@ -21,6 +21,13 @@
 .button.button__danger:focus-within, .button.button__danger:hover {
     background: var(--clr-orange);
 }
+.button.button__secondary {
+    color: var(--clr-text);
+    background: var(--clr-bg-crust);
+}
+.button.button__secondary:focus-within, .button.button__danger:hover {
+    background: var(--clr-bg-crust);
+}
 
 .callout {
     border: 2px solid var(--clr-info, var(--clr-blue));

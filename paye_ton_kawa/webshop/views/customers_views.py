@@ -59,13 +59,15 @@ def find_all_customers(request: Any) -> HttpResponse:
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html", {"error": "Connection failed. Is the API server running ?"})
+        return render(request, "webshop/data_table_content.html",
+                      {"error": "Connection failed. Is the API server running ?"})
 
     try:
         response_json = response.json()
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html", {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(request, "webshop/data_table_content.html",
+                      {"error": "JSON decoding error. Is the API url correct ?"})
 
     customers = []
 
@@ -86,9 +88,98 @@ def find_all_customers(request: Any) -> HttpResponse:
     return render(request, "webshop/data_table_content.html", context)
 
 
-@require_http_methods(['POST'])
-def update_customer(request: Any, customer_id: int) -> HttpResponse:
-    return HttpResponse({"success": f"CLient {customer_id} mis à jour"})
+def update_customer(request: Any, id: int) -> HttpResponse:
+    context = {}
+    error = ""
+    if request.method == "POST":
+        try:
+            data = {
+                "Nom": request.POST.get("last_name", ""),
+                "Prenom": request.POST.get("first_name"),
+                "adresse_code": request.POST.get("postal_code"),
+                "city": request.POST.get("city")
+            }
+            response = requests.patch(f"{API_SETTINGS['customer']['url']}/{id}", params=data, headers=HEADERS)
+            print("Data: \n", request.POST)
+            print("Response: \n", response)
+            print("Content: \n", response.content)
+
+            if response.status_code != 200:
+                print("Data: \n", request.POST)
+                print("Response: \n", response)
+                error = "Error in the customer creation"
+
+            # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+        except requests.exceptions.ConnectionError:
+            print({"error": "Connection failed. Is the API server running ?"})
+            error = "Connection failed. Is the API server running ?"
+
+    try:
+        response = requests.get(f"{API_SETTINGS['customer']['url']}/{id}", headers=HEADERS)
+        # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+    except requests.exceptions.ConnectionError:
+        print({"error": "Connection failed. Is the API server running ?"})
+        error = "Connection failed. Is the API server running ?"
+
+    try:
+        response_json = response.json()[0]
+    except json.JSONDecodeError:
+        print({"error": "JSON decoding error. Is the API url correct ?"})
+        error = "JSON decoding error. Is the API url correct ?"
+
+    fields = {
+        "id": {
+            "label": "ID",
+            "type": "number",
+            "value": response_json["id"]
+        },
+        "last_name": {
+            "label": "Nom",
+            "type": "text",
+            "value": response_json["last_name"],
+        },
+        "first_name": {
+            "label": "Prénom",
+            "type": "text",
+            "value": response_json["first_name"],
+        },
+        "username": {
+            "label": "Pseudonyme",
+            "type": "text",
+            "value": response_json["username"],
+        },
+        "postal_code": {
+            "label": "Code Postal",
+            "type": "number",
+            "value": response_json["address"]["postal_code"],
+        },
+        "city": {
+            "label": "Ville",
+            "type": "text",
+            "value": response_json["address"]["city"],
+        },
+        "company": {
+            "label": "Companie",
+            "type": "text",
+            "value": response_json["company"]["company_name"]
+        },
+        "profile_last_name": {
+            "label": "Nom de profile",
+            "type": "text",
+            "value": response_json["profile"]["last_name"]
+        },
+        "profile_first_name": {
+            "label": "Nom de profile",
+            "type": "text",
+            "value": response_json["profile"]["last_name"]
+        },
+    }
+
+    return render(request, "webshop/update.html", {
+        "customer_id": id,
+        "fields": fields,
+        "error": error
+    })
 
 
 @require_http_methods(['DELETE'])

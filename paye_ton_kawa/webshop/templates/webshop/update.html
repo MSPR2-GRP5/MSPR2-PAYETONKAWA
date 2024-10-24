@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main>
+        <article class="flow region wrapper">
+            <h2>{{ heading }}</h2>
+
+            {% if error %}
+            	<p class="error callout">{{ error }}</p>
+            {% endif %}
+
+            {% include 'webshop/update_form.html' %}
+
+        </article>
+    </main>
+{% endblock %}

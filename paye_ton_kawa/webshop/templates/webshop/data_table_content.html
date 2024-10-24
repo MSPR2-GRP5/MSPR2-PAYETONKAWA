@@ -6,7 +6,7 @@
     </tr>
 {% endif %}
 
-{% if objects|length <= 0 %}
+{% if not error and objects|length <= 0 %}
 	<tr>
         <td colspan="999">Aucune donnée trouvée</td>
     </tr>
@@ -18,7 +18,9 @@
             <td>{{ object|attr:attribute }}</td>
         {% endfor %}
         <td>
-            <button class="button">Modifier</button>
+            <a href="update/{{ object.id }}" class="button">
+                Modifier
+            </a>
             <button class="button button__danger"
                     hx-delete="delete/{{ object.id }}"
                     hx-target="#response-msg"
