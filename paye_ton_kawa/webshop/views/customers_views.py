@@ -5,7 +5,7 @@ from typing import Any, Final
 import environ
 import requests
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
 env = environ.Env()
@@ -37,9 +37,79 @@ def index_customer(request: Any) -> HttpResponse:
     return render(request, "webshop/index.html", context)
 
 
-@require_http_methods(['POST'])
-def create_customer(request: Any, attr: dict[str, Any]) -> HttpResponse:
-    return HttpResponse({"success": f"CLient {attr['name']} créé"})
+def create_customer(request: Any) -> HttpResponse:
+    error = ""
+    if request.method == "POST":
+        try:
+            data = {
+                "Nom": request.POST.get("last_name", ""),
+                "Prenom": request.POST.get("first_name"),
+                "username": request.POST.get("username"),
+                "adresse_code": request.POST.get("postal_code"),
+                "adresse_city": request.POST.get("city"),
+                "first_name": request.POST.get("profile_first_name"),
+                "last_name": request.POST.get("profile_last_name"),
+                "company": request.POST.get("city")
+            }
+            response = requests.post(f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS)
+            print("Data: \n", request.POST)
+            print("Response: \n", response)
+            print("Content: \n", response.content)
+
+            if response.status_code != 200:
+                print("Data: \n", request.POST)
+                print("Response: \n", response)
+                error = "Error in the customer creation"
+            else:
+                return redirect("index_customer")
+
+            # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+        except requests.exceptions.ConnectionError:
+            print({"error": "Connection failed. Is the API server running ?"})
+            error = "Connection failed. Is the API server running ?"
+
+    fields = {
+        "last_name": {
+            "label": "Nom",
+            "type": "text",
+        },
+        "first_name": {
+            "label": "Prénom",
+            "type": "text",
+        },
+        "username": {
+            "label": "Pseudonyme",
+            "type": "text",
+        },
+        "postal_code": {
+            "label": "Code Postal",
+            "type": "number",
+        },
+        "city": {
+            "label": "Ville",
+            "type": "text",
+        },
+        "company": {
+            "label": "Companie",
+            "type": "text",
+        },
+        "profile_last_name": {
+            "label": "Nom de profile",
+            "type": "text",
+        },
+        "profile_first_name": {
+            "label": "Prenom de profile",
+            "type": "text",
+        },
+    }
+
+    return render(request, "webshop/update_customer.html", {
+        "customer_id": id,
+        "fields": fields,
+        "error": error,
+        "heading": "Créer un client",
+        "submit_text": "Créer",
+    })
 
 
 @require_http_methods(['POST'])
@@ -89,7 +159,6 @@ def find_all_customers(request: Any) -> HttpResponse:
 
 
 def update_customer(request: Any, id: int) -> HttpResponse:
-    context = {}
     error = ""
     if request.method == "POST":
         try:
@@ -175,10 +244,12 @@ def update_customer(request: Any, id: int) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
+    return render(request, "webshop/update_customer.html", {
         "customer_id": id,
         "fields": fields,
-        "error": error
+        "error": error,
+        "heading": "Editer un client",
+        "submit_text": "Modifier"
     })
 
 
