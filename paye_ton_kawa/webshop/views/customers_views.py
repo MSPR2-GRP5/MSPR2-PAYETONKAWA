@@ -114,11 +114,27 @@ def create_customer(request: Any) -> HttpResponse:
 
 @require_http_methods(['POST'])
 def find_customer(request: Any) -> HttpResponse:
-    customer_id = int(request.POST.get("search", ""))
+    return HttpResponse("find_customer")
+
+
+@require_http_methods(['POST'])
+def find_customer_by(request: Any) -> HttpResponse:
+    print("find by")
+    print("Data: \n", request.POST)
     try:
-        response = requests.get(f'{API_SETTINGS["customer"]["url"]}/{customer_id}', headers=HEADERS)
-        print("Data: \n", request.POST)
-        print("ID: ", customer_id)
+        if request.POST.get("search-id"):
+            customer_id = int(request.POST.get("search-id", ""))
+            response = requests.get(f'{API_SETTINGS["customer"]["url"]}/{customer_id}', headers=HEADERS)
+        else:
+            postal_code = request.POST.get("search-postal-code")
+            data = {
+                "Nom": request.POST.get("search-last-name", ""),
+                "Prenom": request.POST.get("search-first-name", ""),
+                "postal_code": int(postal_code) if postal_code != "" else 0,
+            }
+
+            response = requests.get(f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS)
+
         print("Response: \n", response)
         print("Content: \n", response.content)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
@@ -152,11 +168,6 @@ def find_customer(request: Any) -> HttpResponse:
     context = {"objects": customers}
 
     return render(request, "webshop/data_table_content.html", context)
-
-
-@require_http_methods(['POST'])
-def find_customer_by(request: Any, attr: dict[str, Any]) -> HttpResponse:
-    return HttpResponse({"success": f"CLient {attr['name']} trouvé"})
 
 
 @require_http_methods(['GET'])
