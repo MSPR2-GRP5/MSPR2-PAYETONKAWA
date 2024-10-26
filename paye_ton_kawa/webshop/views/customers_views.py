@@ -28,7 +28,7 @@ def index_customer(request: Any) -> HttpResponse:
         "heading": "Clients",
         "search_form": {
             "label": "Rechercher un client",
-            "placeholder": "Jean Michel"
+            "placeholder": "ID du client"
         },
         "table_headers": [
             "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie", ""
@@ -113,8 +113,45 @@ def create_customer(request: Any) -> HttpResponse:
 
 
 @require_http_methods(['POST'])
-def find_customer(request: Any, customer_id: int) -> HttpResponse:
-    return HttpResponse({"success": f"CLient {customer_id} trouvé"})
+def find_customer(request: Any) -> HttpResponse:
+    customer_id = int(request.POST.get("search", ""))
+    try:
+        response = requests.get(f'{API_SETTINGS["customer"]["url"]}/{customer_id}', headers=HEADERS)
+        print("Data: \n", request.POST)
+        print("ID: ", customer_id)
+        print("Response: \n", response)
+        print("Content: \n", response.content)
+    # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
+    except requests.exceptions.ConnectionError:
+        print({"error": "Connection failed. Is the API server running ?"})
+        return render(request, "webshop/data_table_content.html",
+                      {"error": "Connection failed. Is the API server running ?"})
+
+    try:
+        response_json = response.json()
+        print("Response JSON:\n", response_json)
+    except json.JSONDecodeError:
+        print({"error": "JSON decoding error. Is the API url correct ?"})
+        return render(request, "webshop/data_table_content.html",
+                      {"error": "JSON decoding error. Is the API url correct ?"})
+
+    customers = []
+
+    for customer_json in response_json:
+        customer = {
+            "id": customer_json["id"],
+            "last_name": customer_json["last_name"],
+            "first_name": customer_json["first_name"],
+            "username": customer_json["username"],
+            "postal_code": customer_json["address"]["postal_code"],
+            "city": customer_json["address"]["city"],
+            "company": customer_json["company"]["company_name"]
+        }
+        customers.append(customer)
+
+    context = {"objects": customers}
+
+    return render(request, "webshop/data_table_content.html", context)
 
 
 @require_http_methods(['POST'])

@@ -7,7 +7,7 @@
         {% endfor %}
     </tr>
     </thead>
-    <tbody hx-target="closest tr" hx-swap="outerHTML">
+    <tbody id="data-table-body" hx-target="closest tr" hx-swap="outerHTML">
     <tr hx-get="find-all/" hx-trigger="load" hx-swap="outerHTML">
         {% for header in table_headers %}
             <td>...</td>

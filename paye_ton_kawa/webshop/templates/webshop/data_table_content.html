@@ -17,7 +17,7 @@
         {% for attribute in object %}
             <td>{{ object|attr:attribute }}</td>
         {% endfor %}
-        <td>
+        <td class="cluster">
             <a href="update/{{ object.id }}" class="button">
                 Modifier
             </a>
