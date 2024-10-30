@@ -13,7 +13,7 @@ env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
     "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/customers"},
-    "product": {"api_key": "", "url": "http://localhost:8002/api/product"},
+    "product": {"api_key":  env("API_TOKEN_PRODUCT"), "url": "http://localhost:8002/products"},
     "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
 }
 
@@ -26,13 +26,28 @@ HEADERS = {
 def index_customer(request: Any) -> HttpResponse:
     context = {
         "heading": "Clients",
-        "search_form": {
-            "label": "Rechercher un client",
-            "placeholder": "ID du client"
-        },
         "table_headers": [
             "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie", ""
-        ]
+        ],
+        "search_form": {
+            "inputs": [
+                {
+                    "id": "search-last-name",
+                    "label": "Nom",
+                    "placeholder": "DUPONT",
+                },
+                {
+                    "id": "search-first-name",
+                    "label": "Prénom",
+                    "placeholder": "Jean",
+                },
+                {
+                    "id": "search-postal-code",
+                    "label": "Code Postal",
+                    "placeholder": "38100",
+                },
+            ]
+        }
     }
     return render(request, "webshop/index.html", context)
 
@@ -103,11 +118,12 @@ def create_customer(request: Any) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update_customer.html", {
+    return render(request, "webshop/update.html", {
         "customer_id": id,
         "fields": fields,
         "error": error,
         "heading": "Créer un client",
+        "cancel_href": "/customers/",
         "submit_text": "Créer",
     })
 
@@ -292,11 +308,12 @@ def update_customer(request: Any, id: int) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update_customer.html", {
+    return render(request, "webshop/update.html", {
         "customer_id": id,
         "fields": fields,
         "error": error,
         "heading": "Editer un client",
+        "cancel_href": "/customers/",
         "submit_text": "Modifier"
     })
 

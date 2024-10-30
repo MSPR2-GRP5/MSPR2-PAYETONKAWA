@@ -7,31 +7,18 @@
     <div class="search-form__controls cluster">
 
         <div class="stack">
-            <label for="search-id">{{ search_form.label }}</label>
-            <input type="number" name="search-id" id="search-id" placeholder="{{ search_form.placeholder }}">
+            <label for="search-id">ID</label>
+            <input type="number" name="search-id" id="search-id" placeholder="12">
         </div>
         <span>OU</span>
-        <div class="stack">
-            <label for="search-last-name">Nom</label>
-            <input type="text" name="search-last-name" id="search-last-name" placeholder="DUPONT">
-        </div>
-        <div class="stack">
-            <label for="search-first-name">Prénom</label>
-            <input type="text" name="search-first-name" id="search-first-name" placeholder="Jean">
-        </div>
-        <div class="stack">
-            <label for="search-postal-code">Code Postal</label>
-            <input type="text" name="search-postal-code" id="search-postal-code" placeholder="38100">
-        </div>
-        <div>
+        {% for input in search_form.inputs %}
+            <div class="stack">
+                <label for="{{ input.id }}">{{ input.label }}</label>
+                <input type="text" name="{{ input.id }}" id="{{ input.id }}" placeholder="{{ input.placeholder }}">
+            </div>
+        {% endfor %}
 
-        </div>
-        <button
-                class="button"
-                type="submit"
-        >
-            Chercher
-        </button>
+        <button class="button" type="submit">Chercher</button>
         <a href="create/" class="button button__secondary">Ajouter</a>
     </div>
 </form>
