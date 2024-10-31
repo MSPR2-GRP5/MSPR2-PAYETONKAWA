@@ -25,9 +25,9 @@ HEADERS = {
 
 def index_product(request: Any) -> HttpResponse:
     context = {
-        "heading": "Clients",
+        "heading": "Produits",
         "table_headers": [
-            "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie", ""
+            "ID", "Nom", "Description", "Couleur", "Price", "Stock", ""
         ],
         "search_form": {
             "inputs": [
@@ -120,8 +120,6 @@ def find_product(request: Any, product_id: int) -> HttpResponse:
 
 @require_http_methods(['POST'])
 def find_product_by(request: Any) -> HttpResponse:
-    print("find by")
-    print("Data: \n", request.POST)
     try:
         if request.POST.get("search-id"):
             product_id = int(request.POST.get("search-id", ""))
@@ -202,6 +200,7 @@ def find_all_products(request: Any) -> HttpResponse:
     context = {"objects": products}
 
     return render(request, "webshop/data_table_content.html", context)
+
 
 def update_product(request: Any, id: int) -> HttpResponse:
     error = ""

@@ -14,7 +14,7 @@ env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
     "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/customers"},
     "product": {"api_key":  env("API_TOKEN_PRODUCT"), "url": "http://localhost:8002/products"},
-    "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
+    "order": {"api_key": env("API_TOKEN_ORDER"), "url": "http://localhost:8003/orders"},
 }
 
 HEADERS = {
@@ -119,7 +119,7 @@ def create_customer(request: Any) -> HttpResponse:
     }
 
     return render(request, "webshop/update.html", {
-        "customer_id": id,
+        "action_id": id,
         "fields": fields,
         "error": error,
         "heading": "Créer un client",
@@ -312,7 +312,7 @@ def update_customer(request: Any, id: int) -> HttpResponse:
         "customer_id": id,
         "fields": fields,
         "error": error,
-        "heading": "Editer un client",
+        "heading": "Modifier un client",
         "cancel_href": "/customers/",
         "submit_text": "Modifier"
     })
