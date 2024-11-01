@@ -8,6 +8,7 @@ COPY . /app
 
 EXPOSE 8000
 
+RUN ls
 RUN python manage.py makemigrations
 RUN python manage.py migrate
 
