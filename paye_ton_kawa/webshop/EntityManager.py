@@ -12,7 +12,10 @@ env = environ.Env()
 env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
-    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/api/customer"},
+    "customer": {
+        "api_key": env("API_TOKEN_CUSTOMER"),
+        "url": "http://localhost:8001/api/customer",
+    },
     "product": {"api_key": "", "url": "http://localhost:8002/api/product"},
     "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
 }
@@ -29,7 +32,9 @@ def request(api_name: str, parameters: dict[str, Any]) -> Any:
     }
 
     try:
-        response = requests.get(url, params=parameters["request_params"], headers=headers)
+        response = requests.get(
+            url, params=parameters["request_params"], headers=headers
+        )
         print(response)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
@@ -93,18 +98,19 @@ class EntityManager:
     @staticmethod
     def get_all(
         api_name: str,
-    ) -> list[Customer] | list[Product] | list[Order] | list[None] | dict[str, Any] :
+    ) -> list[Customer] | list[Product] | list[Order] | list[None] | dict[str, Any]:
         # Exploit the API to get all the entities without knowing the fields name
-        params = {
-            "request_params": {
-                "gibberish": "random"
-            }
-        }
+        params = {"request_params": {"gibberish": "random"}}
 
         response = request(api_name, params)
 
         if "error" in response:
-            print("####################\n", "Error: ", response["error"], "\n####################\n")
+            print(
+                "####################\n",
+                "Error: ",
+                response["error"],
+                "\n####################\n",
+            )
             return response
 
         return json_to_object(response, api_name)

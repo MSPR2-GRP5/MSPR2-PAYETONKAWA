@@ -8,9 +8,9 @@ register = template.Library()
 # https://stackoverflow.com/a/3466349
 @register.filter
 def attr(obj, att):
-    pseudo_context = {'object': obj}
+    pseudo_context = {"object": obj}
     try:
-        value = Variable('object.%s' % att).resolve(pseudo_context)
+        value = Variable("object.%s" % att).resolve(pseudo_context)
     except VariableDoesNotExist:
         value = None
 

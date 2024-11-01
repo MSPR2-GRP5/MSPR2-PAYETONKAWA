@@ -12,8 +12,14 @@ env = environ.Env()
 env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
-    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/customers"},
-    "product": {"api_key":  env("API_TOKEN_PRODUCT"), "url": "http://localhost:8002/products"},
+    "customer": {
+        "api_key": env("API_TOKEN_CUSTOMER"),
+        "url": "http://localhost:8001/customers",
+    },
+    "product": {
+        "api_key": env("API_TOKEN_PRODUCT"),
+        "url": "http://localhost:8002/products",
+    },
     "order": {"api_key": env("API_TOKEN_ORDER"), "url": "http://localhost:8003/orders"},
 }
 
@@ -26,12 +32,8 @@ HEADERS = {
 def index_order(request: Any) -> HttpResponse:
     context = {
         "heading": "Commandes",
-        "table_headers": [
-            "ID", "Date de création", "Client", "Produits", ""
-        ],
-        "search_form": {
-            "inputs": []
-        }
+        "table_headers": ["ID", "Date de création", "Client", "Produits", ""],
+        "search_form": {"inputs": []},
     }
     return render(request, "webshop/index.html", context)
 
@@ -44,7 +46,9 @@ def create_order(request: Any) -> HttpResponse:
                 "customerId": request.POST.get("customer_id"),
                 "products": request.POST.get("products"),
             }
-            response = requests.post(f"{API_SETTINGS['order']['url']}/", params=data, headers=HEADERS)
+            response = requests.post(
+                f"{API_SETTINGS['order']['url']}/", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("Response: \n", response)
             print("Content: \n", response.content)
@@ -72,23 +76,28 @@ def create_order(request: Any) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "action_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Créer une commande",
-        "cancel_href": "/orders/",
-        "submit_text": "Créer",
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "action_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Créer une commande",
+            "cancel_href": "/orders/",
+            "submit_text": "Créer",
+        },
+    )
 
-@require_http_methods(['POST'])
+
+@require_http_methods(["POST"])
 def find_order(request: Any, order_id: int) -> HttpResponse:
     return HttpResponse({"success": f"Commande {order_id} trouvé"})
 
 
-@require_http_methods(['POST'])
+@require_http_methods(["POST"])
 def find_order_by(request: Any) -> HttpResponse:
-    return HttpResponse({"success": f"Commande {attr['name']} trouvé"})
+    return HttpResponse({"success": "Commande trouvé"})
 
 
 def find_all_orders(request: Any) -> HttpResponse:
@@ -97,15 +106,21 @@ def find_all_orders(request: Any) -> HttpResponse:
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "Connection failed. Is the API server running ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "Connection failed. Is the API server running ?"},
+        )
 
     try:
         response_json = response.json()
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "JSON decoding error. Is the API url correct ?"},
+        )
 
     orders = []
 
@@ -136,10 +151,12 @@ def update_order(request: Any, id: int) -> HttpResponse:
         try:
             data = {
                 "client_id": request.POST.get("customer_id"),
-                "product_id": request.POST.get("products")
+                "product_id": request.POST.get("products"),
             }
 
-            response = requests.patch(f"{API_SETTINGS['order']['url']}/{id}", params=data, headers=HEADERS)
+            response = requests.patch(
+                f"{API_SETTINGS['order']['url']}/{id}", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("Response: \n", response)
             print("Content: \n", response.content)
@@ -165,27 +182,33 @@ def update_order(request: Any, id: int) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "action_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Modifier une commande",
-        "cancel_href": "/orders/",
-        "submit_text": "Modifier",
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "action_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Modifier une commande",
+            "cancel_href": "/orders/",
+            "submit_text": "Modifier",
+        },
+    )
 
 
-@require_http_methods(['DELETE'])
+@require_http_methods(["DELETE"])
 def delete_order(request: Any, id: int) -> HttpResponse:
     try:
-        data = {
-            "id": id
-        }
+        data = {"id": id}
 
-        requests.delete(f"{API_SETTINGS['order']['url']}/", params=data, headers=HEADERS)
+        requests.delete(
+            f"{API_SETTINGS['order']['url']}/", params=data, headers=HEADERS
+        )
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
         return HttpResponse('<p class="error callout" id="response-msg">Erreur</p>')
 
-    return HttpResponse({f"<p class='success callout' id='response-msg'>Commande {id} supprimée</p>"})
+    return HttpResponse(
+        {f"<p class='success callout' id='response-msg'>Commande {id} supprimée</p>"}
+    )

@@ -12,8 +12,14 @@ env = environ.Env()
 env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
-    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/customers"},
-    "product": {"api_key":  env("API_TOKEN_PRODUCT"), "url": "http://localhost:8002/products"},
+    "customer": {
+        "api_key": env("API_TOKEN_CUSTOMER"),
+        "url": "http://localhost:8001/customers",
+    },
+    "product": {
+        "api_key": env("API_TOKEN_PRODUCT"),
+        "url": "http://localhost:8002/products",
+    },
     "order": {"api_key": env("API_TOKEN_ORDER"), "url": "http://localhost:8003/orders"},
 }
 
@@ -27,7 +33,14 @@ def index_customer(request: Any) -> HttpResponse:
     context = {
         "heading": "Clients",
         "table_headers": [
-            "ID", "Nom", "Prénom", "Pseudonyme", "Code Postal", "Ville", "Companie", ""
+            "ID",
+            "Nom",
+            "Prénom",
+            "Pseudonyme",
+            "Code Postal",
+            "Ville",
+            "Companie",
+            "",
         ],
         "search_form": {
             "inputs": [
@@ -47,7 +60,7 @@ def index_customer(request: Any) -> HttpResponse:
                     "placeholder": "38100",
                 },
             ]
-        }
+        },
     }
     return render(request, "webshop/index.html", context)
 
@@ -64,9 +77,11 @@ def create_customer(request: Any) -> HttpResponse:
                 "adresse_city": request.POST.get("city"),
                 "first_name": request.POST.get("profile_first_name"),
                 "last_name": request.POST.get("profile_last_name"),
-                "company": request.POST.get("city")
+                "company": request.POST.get("city"),
             }
-            response = requests.post(f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS)
+            response = requests.post(
+                f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("Response: \n", response)
             print("Content: \n", response.content)
@@ -118,29 +133,35 @@ def create_customer(request: Any) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "action_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Créer un client",
-        "cancel_href": "/customers/",
-        "submit_text": "Créer",
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "action_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Créer un client",
+            "cancel_href": "/customers/",
+            "submit_text": "Créer",
+        },
+    )
 
 
-@require_http_methods(['POST'])
+@require_http_methods(["POST"])
 def find_customer(request: Any) -> HttpResponse:
     return HttpResponse("find_customer")
 
 
-@require_http_methods(['POST'])
+@require_http_methods(["POST"])
 def find_customer_by(request: Any) -> HttpResponse:
     print("find by")
     print("Data: \n", request.POST)
     try:
         if request.POST.get("search-id"):
             customer_id = int(request.POST.get("search-id", ""))
-            response = requests.get(f'{API_SETTINGS["customer"]["url"]}/{customer_id}', headers=HEADERS)
+            response = requests.get(
+                f'{API_SETTINGS["customer"]["url"]}/{customer_id}', headers=HEADERS
+            )
         else:
             postal_code = request.POST.get("search-postal-code")
             data = {
@@ -149,23 +170,31 @@ def find_customer_by(request: Any) -> HttpResponse:
                 "postal_code": int(postal_code) if postal_code != "" else 0,
             }
 
-            response = requests.get(f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS)
+            response = requests.get(
+                f"{API_SETTINGS['customer']['url']}/", params=data, headers=HEADERS
+            )
 
         print("Response: \n", response)
         print("Content: \n", response.content)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "Connection failed. Is the API server running ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "Connection failed. Is the API server running ?"},
+        )
 
     try:
         response_json = response.json()
         print("Response JSON:\n", response_json)
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "JSON decoding error. Is the API url correct ?"},
+        )
 
     customers = []
 
@@ -177,7 +206,7 @@ def find_customer_by(request: Any) -> HttpResponse:
             "username": customer_json["username"],
             "postal_code": customer_json["address"]["postal_code"],
             "city": customer_json["address"]["city"],
-            "company": customer_json["company"]["company_name"]
+            "company": customer_json["company"]["company_name"],
         }
         customers.append(customer)
 
@@ -186,22 +215,28 @@ def find_customer_by(request: Any) -> HttpResponse:
     return render(request, "webshop/data_table_content.html", context)
 
 
-@require_http_methods(['GET'])
+@require_http_methods(["GET"])
 def find_all_customers(request: Any) -> HttpResponse:
     try:
         response = requests.get(API_SETTINGS["customer"]["url"], headers=HEADERS)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "Connection failed. Is the API server running ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "Connection failed. Is the API server running ?"},
+        )
 
     try:
         response_json = response.json()
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "JSON decoding error. Is the API url correct ?"},
+        )
 
     customers = []
 
@@ -213,7 +248,7 @@ def find_all_customers(request: Any) -> HttpResponse:
             "username": customer_json["username"],
             "postal_code": customer_json["address"]["postal_code"],
             "city": customer_json["address"]["city"],
-            "company": customer_json["company"]["company_name"]
+            "company": customer_json["company"]["company_name"],
         }
         customers.append(customer)
 
@@ -230,9 +265,11 @@ def update_customer(request: Any, id: int) -> HttpResponse:
                 "Nom": request.POST.get("last_name", ""),
                 "Prenom": request.POST.get("first_name"),
                 "adresse_code": request.POST.get("postal_code"),
-                "city": request.POST.get("city")
+                "city": request.POST.get("city"),
             }
-            response = requests.patch(f"{API_SETTINGS['customer']['url']}/{id}", params=data, headers=HEADERS)
+            response = requests.patch(
+                f"{API_SETTINGS['customer']['url']}/{id}", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("Response: \n", response)
             print("Content: \n", response.content)
@@ -248,7 +285,9 @@ def update_customer(request: Any, id: int) -> HttpResponse:
             error = "Connection failed. Is the API server running ?"
 
     try:
-        response = requests.get(f"{API_SETTINGS['customer']['url']}/{id}", headers=HEADERS)
+        response = requests.get(
+            f"{API_SETTINGS['customer']['url']}/{id}", headers=HEADERS
+        )
         # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
@@ -261,11 +300,7 @@ def update_customer(request: Any, id: int) -> HttpResponse:
         error = "JSON decoding error. Is the API url correct ?"
 
     fields = {
-        "id": {
-            "label": "ID",
-            "type": "number",
-            "value": response_json["id"]
-        },
+        "id": {"label": "ID", "type": "number", "value": response_json["id"]},
         "last_name": {
             "label": "Nom",
             "type": "text",
@@ -294,31 +329,35 @@ def update_customer(request: Any, id: int) -> HttpResponse:
         "company": {
             "label": "Companie",
             "type": "text",
-            "value": response_json["company"]["company_name"]
+            "value": response_json["company"]["company_name"],
         },
         "profile_last_name": {
             "label": "Nom de profile",
             "type": "text",
-            "value": response_json["profile"]["last_name"]
+            "value": response_json["profile"]["last_name"],
         },
         "profile_first_name": {
             "label": "Nom de profile",
             "type": "text",
-            "value": response_json["profile"]["last_name"]
+            "value": response_json["profile"]["last_name"],
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "customer_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Modifier un client",
-        "cancel_href": "/customers/",
-        "submit_text": "Modifier"
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "customer_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Modifier un client",
+            "cancel_href": "/customers/",
+            "submit_text": "Modifier",
+        },
+    )
 
 
-@require_http_methods(['DELETE'])
+@require_http_methods(["DELETE"])
 def delete_customer(request: Any, id: int) -> HttpResponse:
     try:
         requests.delete(API_SETTINGS["customer"]["url"] + f"/{id}", headers=HEADERS)
@@ -327,4 +366,6 @@ def delete_customer(request: Any, id: int) -> HttpResponse:
         print({"error": "Connection failed. Is the API server running ?"})
         return HttpResponse('<p class="error callout" id="response-msg">Erreur</p>')
 
-    return HttpResponse({f"<p class='success callout' id='response-msg'>CLient {id} supprimé</p>"})
+    return HttpResponse(
+        {f"<p class='success callout' id='response-msg'>CLient {id} supprimé</p>"}
+    )

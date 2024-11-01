@@ -6,16 +6,16 @@ from datetime import datetime
 
 class Customer(object):
     def __init__(
-        self,
-        customer_id: int,
-        created_at: datetime,
-        name: str,
-        username: str,
-        last_name: str,
-        first_name: str,
-        address: dict[str: str | int],
-        profile: dict[str:str],
-        company: dict[str:str],
+            self,
+            customer_id: int,
+            created_at: datetime,
+            name: str,
+            username: str,
+            last_name: str,
+            first_name: str,
+            address: dict[str, str | int],
+            profile: dict[str, str],
+            company: dict[str, str],
     ):
         self.id = customer_id
         self.created_at = created_at
@@ -33,13 +33,13 @@ class Customer(object):
 
 class Product:
     def __init__(
-        self,
-        id: int,
-        name: str,
-        description: str,
-        import_location: str,
-        price: int,
-        stocks: int,
+            self,
+            id: int,
+            name: str,
+            description: str,
+            import_location: str,
+            price: int,
+            stocks: int,
     ):
         self.id = id
         self.name = name
@@ -54,13 +54,13 @@ class Product:
 
 class Order:
     def __init__(
-        self,
-        id: int,
-        customer_id: int,
-        product_id: int,
-        date: datetime,
-        quantity: int,
-        price: int,
+            self,
+            id: int,
+            customer_id: int,
+            product_id: int,
+            date: datetime,
+            quantity: int,
+            price: int,
     ):
         self.id = id
         self.client_id = customer_id

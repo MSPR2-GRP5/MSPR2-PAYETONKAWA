@@ -12,8 +12,14 @@ env = environ.Env()
 env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
-    "customer": {"api_key": env("API_TOKEN_CUSTOMER"), "url": "http://localhost:8001/customers"},
-    "product": {"api_key":  env("API_TOKEN_PRODUCT"), "url": "http://localhost:8002/products"},
+    "customer": {
+        "api_key": env("API_TOKEN_CUSTOMER"),
+        "url": "http://localhost:8001/customers",
+    },
+    "product": {
+        "api_key": env("API_TOKEN_PRODUCT"),
+        "url": "http://localhost:8002/products",
+    },
     "order": {"api_key": "", "url": "http://localhost:8003/api/order"},
 }
 
@@ -26,9 +32,7 @@ HEADERS = {
 def index_product(request: Any) -> HttpResponse:
     context = {
         "heading": "Produits",
-        "table_headers": [
-            "ID", "Nom", "Description", "Couleur", "Price", "Stock", ""
-        ],
+        "table_headers": ["ID", "Nom", "Description", "Couleur", "Price", "Stock", ""],
         "search_form": {
             "inputs": [
                 {
@@ -47,7 +51,7 @@ def index_product(request: Any) -> HttpResponse:
                     "placeholder": "Jaune",
                 },
             ]
-        }
+        },
     }
     return render(request, "webshop/index.html", context)
 
@@ -63,7 +67,9 @@ def create_product(request: Any) -> HttpResponse:
                 "add_price": request.POST.get("price"),
                 "add_stock": request.POST.get("stock"),
             }
-            response = requests.post(f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS)
+            response = requests.post(
+                f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("HEADERS: \n", HEADERS)
             print("Response: \n", response)
@@ -104,26 +110,33 @@ def create_product(request: Any) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "action_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Créer un produit",
-        "cancel_href": "/products/",
-        "submit_text": "Créer",
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "action_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Créer un produit",
+            "cancel_href": "/products/",
+            "submit_text": "Créer",
+        },
+    )
 
-@require_http_methods(['POST'])
+
+@require_http_methods(["POST"])
 def find_product(request: Any, product_id: int) -> HttpResponse:
     return HttpResponse({"success": f"Produit {product_id} trouvé"})
 
 
-@require_http_methods(['POST'])
+@require_http_methods(["POST"])
 def find_product_by(request: Any) -> HttpResponse:
     try:
         if request.POST.get("search-id"):
             product_id = int(request.POST.get("search-id", ""))
-            response = requests.get(f'{API_SETTINGS["product"]["url"]}/{product_id}', headers=HEADERS)
+            response = requests.get(
+                f'{API_SETTINGS["product"]["url"]}/{product_id}', headers=HEADERS
+            )
         else:
             data = {
                 "search_name": request.POST.get("search-name", ""),
@@ -131,23 +144,31 @@ def find_product_by(request: Any) -> HttpResponse:
                 "search_color": request.POST.get("search-desc", ""),
             }
 
-            response = requests.get(f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS)
+            response = requests.get(
+                f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS
+            )
 
         print("Response: \n", response)
         print("Content: \n", response.content)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "Connection failed. Is the API server running ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "Connection failed. Is the API server running ?"},
+        )
 
     try:
         response_json = response.json()
         print("Response JSON:\n", response_json)
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "JSON decoding error. Is the API url correct ?"},
+        )
 
     products = []
 
@@ -167,22 +188,28 @@ def find_product_by(request: Any) -> HttpResponse:
     return render(request, "webshop/data_table_content.html", context)
 
 
-@require_http_methods(['GET'])
+@require_http_methods(["GET"])
 def find_all_products(request: Any) -> HttpResponse:
     try:
         response = requests.get(API_SETTINGS["product"]["url"], headers=HEADERS)
     # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "Connection failed. Is the API server running ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "Connection failed. Is the API server running ?"},
+        )
 
     try:
         response_json = response.json()
     except json.JSONDecodeError:
         print({"error": "JSON decoding error. Is the API url correct ?"})
-        return render(request, "webshop/data_table_content.html",
-                      {"error": "JSON decoding error. Is the API url correct ?"})
+        return render(
+            request,
+            "webshop/data_table_content.html",
+            {"error": "JSON decoding error. Is the API url correct ?"},
+        )
 
     products = []
 
@@ -215,7 +242,9 @@ def update_product(request: Any, id: int) -> HttpResponse:
                 "update_stock": request.POST.get("stock"),
             }
 
-            response = requests.patch(f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS)
+            response = requests.patch(
+                f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS
+            )
             print("Data: \n", request.POST)
             print("Response: \n", response)
             print("Content: \n", response.content)
@@ -231,7 +260,9 @@ def update_product(request: Any, id: int) -> HttpResponse:
             error = "Connection failed. Is the API server running ?"
 
     try:
-        response = requests.get(f"{API_SETTINGS['product']['url']}/{id}", headers=HEADERS)
+        response = requests.get(
+            f"{API_SETTINGS['product']['url']}/{id}", headers=HEADERS
+        )
         # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
@@ -271,26 +302,35 @@ def update_product(request: Any, id: int) -> HttpResponse:
         },
     }
 
-    return render(request, "webshop/update.html", {
-        "action_id": id,
-        "fields": fields,
-        "error": error,
-        "heading": "Modifier un produit",
-        "cancel_href": "/products/",
-        "submit_text": "Modifier",
-    })
+    return render(
+        request,
+        "webshop/update.html",
+        {
+            "action_id": id,
+            "fields": fields,
+            "error": error,
+            "heading": "Modifier un produit",
+            "cancel_href": "/products/",
+            "submit_text": "Modifier",
+        },
+    )
 
-@require_http_methods(['DELETE'])
+
+@require_http_methods(["DELETE"])
 def delete_product(request: Any, id: int) -> HttpResponse:
     try:
         data = {
             "id": id,
         }
 
-        response = requests.delete(f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS)
+        requests.delete(
+            f"{API_SETTINGS['product']['url']}/", params=data, headers=HEADERS
+        )
         # The error returned is not the standard ConnectionError, it is a specific requests error with the same name
     except requests.exceptions.ConnectionError:
         print({"error": "Connection failed. Is the API server running ?"})
         return HttpResponse('<p class="error callout" id="response-msg">Erreur</p>')
 
-    return HttpResponse({f"<p class='success callout' id='response-msg'>Produit {id} supprimé</p>"})
+    return HttpResponse(
+        {f"<p class='success callout' id='response-msg'>Produit {id} supprimé</p>"}
+    )
