@@ -53,5 +53,5 @@ urlpatterns = [
     path("customers/", include(get_crud_patterns("customer"))),
     path("orders/", include(get_crud_patterns("order"))),
     path("products/", include(get_crud_patterns("product"))),
-    path("home/", webshop_views.index, name="index"),
+    path("", webshop_views.index, name="index"),
 ]

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main>
+        <article class="flow region wrapper">
+            <h2>Accueil</h2>
+
+            <ul>
+                <li>
+                    <a href="{% url 'index_customer' %}">Clients</a>
+                </li>
+                <li>
+                    <a href="{% url 'index_product' %}">Produits</a>
+                </li>
+                <li>
+                    <a href="{% url 'index_order' %}">Commandes</a>
+                </li>
+            </ul>
+        </article>
+    </main>
+{% endblock %}
