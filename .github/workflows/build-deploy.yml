@@ -25,8 +25,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: {context}/paye_ton_kawa/Dockerfile
+          context: ./paye_ton_kawa/Dockerfile
           push: true
           tags: lorispcin/ptk_erp:latest
 
