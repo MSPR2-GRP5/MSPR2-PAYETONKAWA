@@ -23,7 +23,7 @@ API_SETTINGS: Final[dict[str, dict[str, str]]] = {
 
 def request(api_name: str, parameters: dict[str, Any]) -> Any:
     settings = API_SETTINGS[api_name]
-    url_id = f"/{parameters["url_id"]}" if "url_id" in parameters else ""
+    url_id = f"/{parameters['url_id']}" if "url_id" in parameters else ""
     url = f"{settings['url']}{url_id}"
     print(url)
     headers = {

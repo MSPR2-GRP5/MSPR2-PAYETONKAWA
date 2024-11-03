@@ -1,8 +1,11 @@
+networks:
+  web:
+    external: true
+
 services:
-  app:
-    container_name: paye-ton-kawa
-    build: ../paye_ton_kawa
-    command: python manage.py runserver 0.0.0.0:8000
+  web:
+    container_name: mspr_ptk
+    build: .
     ports:
       - "8000:8000"
     labels:
