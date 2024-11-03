@@ -14,13 +14,13 @@ env.read_env(str(Path(__file__).resolve().parent.parent / ".env"))
 API_SETTINGS: Final[dict[str, dict[str, str]]] = {
     "customer": {
         "api_key": env("API_TOKEN_CUSTOMER"),
-        "url": "http://localhost:8001/customers",
+        "url": "https://client.mspr.lorisperc.in",
     },
     "product": {
         "api_key": env("API_TOKEN_PRODUCT"),
-        "url": "http://localhost:8002/products",
+        "url": "https://produit.mspr.lorisperc.in",
     },
-    "order": {"api_key": env("API_TOKEN_ORDER"), "url": "http://localhost:8003/orders"},
+    "order": {"api_key": env("API_TOKEN_ORDER"), "url": "https://commande.mspr.lorisperc.in"},
 }
 
 HEADERS = {
