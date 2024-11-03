@@ -30,6 +30,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 
 # 'ALLOWED_HOSTS' should be a single string of hosts with a space between each
 ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default="http://localhost,http://127.0.0.1").split(",")
 
 
 # Application definition
