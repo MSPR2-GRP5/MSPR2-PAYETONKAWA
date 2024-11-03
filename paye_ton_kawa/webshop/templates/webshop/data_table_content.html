@@ -1,0 +1,33 @@
+{% load webshop_tags %}
+
+{% if error %}
+    <tr>
+        <td colspan="999" class="error">Oups, une erreur est survenue</td>
+    </tr>
+{% endif %}
+
+{% if not error and objects|length <= 0 %}
+	<tr>
+        <td colspan="999">Aucune donnée trouvée</td>
+    </tr>
+{% endif %}
+
+{% for object in objects %}
+    <tr>
+        {% for attribute in object %}
+            <td>{{ object|attr:attribute }}</td>
+        {% endfor %}
+        <td class="cluster">
+            <a href="update/{{ object.id }}" class="button">
+                Modifier
+            </a>
+            <button class="button button__danger"
+                    hx-delete="delete/{{ object.id }}"
+                    hx-target="#response-msg"
+                    hx-swap="outerHTML">
+                Supprimer
+            </button>
+        </td>
+    </tr>
+{% endfor %}
+

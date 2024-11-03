@@ -1,0 +1,32 @@
+body {
+    font-family: var(--font-base);
+    font-size: var(--text-size-base);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--leading);
+    color: var(--clr-text);
+
+    background: var(--clr-bg-base);
+}
+
+input[type="text"] {
+    background: var(--clr-transparent);
+    color: inherit;
+    border: none;
+    border-bottom: .3rem solid var(--clr-text);
+}
+input[type="text"]:focus-visible {
+    outline: none;
+    border-bottom: .3rem solid var(--clr-purple);
+}
+table {
+    border-collapse: collapse;
+}
+table th, table td {
+    padding: 0.5rem 1rem;
+}
+table tr:first-child {
+    border-bottom: 2px solid var(--clr-bg-crust);
+}
+table tr:nth-child(even) {
+    background: var(--clr-bg-mantle);
+}

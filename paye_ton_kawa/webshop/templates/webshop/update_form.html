@@ -1,0 +1,22 @@
+<form action="{{ action_id }}"
+      method="post"
+      class="search-form flow"
+>
+    {% csrf_token %}
+
+    {% for id, field in fields.items %}
+        <div class="stack">
+            <label for="{{ id }}">{{ field.label }}</label>
+            <input type="{{ field.type }}"
+                   name="{{ id }}"
+                   id="{{ id }}"
+                   value="{{ field.value }}"
+                   required>
+        </div>
+    {% endfor %}
+    <a href="{{ cancel_href }}" class="button button__secondary">Annuler</a>
+    <button class="button"
+            type="submit">
+        {{ submit_text }}
+    </button>
+</form>

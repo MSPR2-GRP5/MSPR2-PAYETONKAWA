@@ -1,0 +1,24 @@
+<form
+        class="search-form flow"
+        hx-post="find-by/"
+        hx-target="#data-table-body"
+        hx-swap="innerHTML"
+>
+    <div class="search-form__controls cluster">
+
+        <div class="stack">
+            <label for="search-id">ID</label>
+            <input type="number" name="search-id" id="search-id" placeholder="12">
+        </div>
+        <span>OU</span>
+        {% for input in search_form.inputs %}
+            <div class="stack">
+                <label for="{{ input.id }}">{{ input.label }}</label>
+                <input type="text" name="{{ input.id }}" id="{{ input.id }}" placeholder="{{ input.placeholder }}">
+            </div>
+        {% endfor %}
+
+        <button class="button" type="submit">Chercher</button>
+        <a href="create/" class="button button__secondary">Ajouter</a>
+    </div>
+</form>

@@ -1,0 +1,52 @@
+/* ICON */
+.icon {
+    width: 0.75em;
+    width: 1.15cap;
+    height: 0.75em;
+    height: 1.15cap;
+    filter: invert(90%) sepia(5%) saturate(4496%) hue-rotate(186deg) brightness(101%) contrast(92%);
+}
+
+.with-icon {
+    display: inline-flex;
+    align-items: baseline;
+}
+
+.with-icon .icon {
+    margin-inline-end: 1rem;
+}
+
+/* STACK */
+.stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.stack > * {
+    margin-block: 0;
+}
+
+.stack > * + * {
+    margin-block-start: var(--space, 1.5rem);
+}
+
+/* CENTER */
+.center {
+    box-sizing: content-box;
+    margin-inline: auto;
+    max-inline-size: 60ch;
+    padding-inline-start: var(--space-gutter);
+    padding-inline-end: var(--space-gutter);
+    display:flex;
+    flex-direction: column;
+}
+
+/* Cluster */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space, 0.5rem);
+  justify-content: flex-start;
+  align-items: center;
+}

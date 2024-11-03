@@ -1,0 +1,17 @@
+<p id="response-msg"></p>
+<table>
+    <thead>
+    <tr>
+        {% for header in table_headers %}
+            <th>{{ header }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody id="data-table-body" hx-target="closest tr" hx-swap="outerHTML">
+    <tr hx-get="find-all/" hx-trigger="load" hx-swap="outerHTML">
+        {% for header in table_headers %}
+            <td>...</td>
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>

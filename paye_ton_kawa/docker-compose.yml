@@ -1,0 +1,24 @@
+networks:
+  web:
+    external: true
+
+services:
+  web:
+    container_name: mspr_ptk
+    build: .
+    ports:
+      - "8000:8000"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web
+      - traefik.http.routers.mspr_ptk.rule=Host(`mspr.lorisperc.in`)
+      - traefik.http.routers.mspr_ptk.service=mspr_ptk
+      - traefik.http.routers.mspr_ptk.entrypoints=web
+      - traefik.http.routers.mspr_ptk.entrypoints=websecure
+      - traefik.http.routers.mspr_ptk.tls=true
+      - traefik.http.routers.mspr_ptk.tls.certResolver=lets-encrypt
+      - traefik.http.services.mspr_ptk.loadbalancer.server.port=8000
+    networks:
+      - web
+    env_file:
+      - .env
