@@ -1,0 +1,7 @@
+kubectl apply -f service.yaml
+
+kubectl apply -f deployment.yaml
+
+kubectl get services
+
+kubectl get pods

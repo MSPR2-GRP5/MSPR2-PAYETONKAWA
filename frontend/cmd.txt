@@ -1,0 +1,8 @@
+# Création de l'image Docker via le dockerfile local
+docker build -t angular .
+
+# Création d'un conteneur selon l'image du nom "angular"
+docker run -p 4201:4200 angular
+
+
+http://localhost:4201/
